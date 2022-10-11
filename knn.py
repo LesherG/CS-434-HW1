@@ -174,7 +174,7 @@ def knn_classify_point(examples_X, examples_y, query, k):
     for x in NN:
         if(examples_y[x] == 1):
             tally += 1.
-
+            
     if(tally/k > .5):
         return 1
     return 0
@@ -200,9 +200,32 @@ def knn_classify_point(examples_X, examples_y, query, k):
 ######################################################################
 
 def cross_validation(train_X, train_y, num_folds=4, k=1):
-    #TODO
 
-    return 20, 20
+    folds = np.split(train_X, num_folds)
+    fold_labels = np.split(train_y, num_folds)
+
+    accuracy = []
+
+    for x in range(num_folds):
+        testX = folds[x]
+        testY = fold_labels[x]
+        newTrainX = []
+        newTrainY = []
+        
+        # generate new training and testing sets to compare with
+        for i in range(num_folds):
+            if(i != x):
+                newTrainX = np.vstack(newTrainX, folds[i])
+                newTrainY = np.vstack(newTrainY, fold_labels[i])
+
+        pred = predict(newTrainX, newTrainY, testX, k)
+        accuracy.append(compute_accuracy(testY, pred))
+        print(accuracy)
+
+    return np.mean(accuracy), np.var(accuracy)
+    
+
+
     # return avg_val_acc, varr_val_acc
 
 
