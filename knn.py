@@ -78,12 +78,13 @@ def main():
       #######################################
       # TODO Compute train accuracy using whole set
       #######################################
-      train_acc = 0 
+      pred = predict(train_X, train_y, train_X, k)
+      train_acc = compute_accuracy(train_y, pred)
 
       #######################################
-      # TODO Compute 4-fold cross validation accuracy
+      # Compute 4-fold cross validation accuracy
       #######################################
-      val_acc, val_acc_var = 0,0
+      val_acc, val_acc_var = cross_validation(train_X, train_y, k=k)
       
       t1 = time.time()
       print("k = {:5d} -- train acc = {:.2f}%  val acc = {:.2f}% ({:.4f})\t\t[exe_time = {:.2f}]".format(k, train_acc*100, val_acc*100, val_acc_var*100, t1-t0))
@@ -172,12 +173,10 @@ def knn_classify_point(examples_X, examples_y, query, k):
 
     tally = 0.
     for x in NN:
-        if(examples_y[x] == 1):
-            tally += 1.
+        tally += examples_y[x]
             
-    if(tally/k > .5):
-        return 1
-    return 0
+    return 1 if tally/k > .5 else 0
+
     # return predicted_label
 
 
@@ -208,19 +207,15 @@ def cross_validation(train_X, train_y, num_folds=4, k=1):
 
     for x in range(num_folds):
         testX = folds[x]
-        testY = fold_labels[x]
-        newTrainX = []
-        newTrainY = []
-        
+        testY = fold_labels[x]  
         # generate new training and testing sets to compare with
-        for i in range(num_folds):
-            if(i != x):
-                newTrainX = np.vstack(newTrainX, folds[i])
-                newTrainY = np.vstack(newTrainY, fold_labels[i])
+
+        newTrainX = np.vstack(folds[:x] + folds[x+1:])
+        newTrainY = np.vstack(fold_labels[:x] + fold_labels[x+1:])
 
         pred = predict(newTrainX, newTrainY, testX, k)
         accuracy.append(compute_accuracy(testY, pred))
-        print(accuracy)
+        #print(accuracy)
 
     return np.mean(accuracy), np.var(accuracy)
     
