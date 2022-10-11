@@ -1,3 +1,4 @@
+from distutils.log import debug
 import numpy as np
 import time
 
@@ -132,8 +133,18 @@ def main():
 ######################################################################
 
 def get_nearest_neighbors(example_set, query, k):
-    #TODO
-    return idx_of_nearest  
+    
+    Y = (example_set-query)
+    YNorm = np.linalg.norm(Y, axis=1)
+    sortedIndecies = np.argsort(YNorm)
+
+    return sortedIndecies[:k]
+
+    # One line return
+
+    # return np.argsort(np.linalg.norm(example_set-query, axis=1))[:k]
+
+    # return idx_of_nearest
 
 
 ######################################################################
@@ -157,8 +168,17 @@ def get_nearest_neighbors(example_set, query, k):
 ######################################################################
 
 def knn_classify_point(examples_X, examples_y, query, k):
-    #TODO
-    return predicted_label
+    NN = get_nearest_neighbors(examples_X, query, k)
+
+    tally = 0.
+    for x in NN:
+        if(examples_y[x] == 1):
+            tally += 1.
+
+    if(tally/k > .5):
+        return 1
+    return 0
+    # return predicted_label
 
 
 
@@ -181,7 +201,9 @@ def knn_classify_point(examples_X, examples_y, query, k):
 
 def cross_validation(train_X, train_y, num_folds=4, k=1):
     #TODO
-    return avg_val_acc, varr_val_acc
+
+    return 20, 20
+    # return avg_val_acc, varr_val_acc
 
 
 
