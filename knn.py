@@ -72,7 +72,7 @@ def main():
 
     # Search over possible settings of k
     print("Performing 4-fold cross validation")
-    for k in [1,3,5,7,9,99,999,8000]:
+    for k in [30, 35, 40, 45 ,50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110]:
       t0 = time.time()
 
       #######################################
@@ -98,7 +98,7 @@ def main():
 
 
     # TODO set your best k value and then run on the test set
-    best_k = 1
+    best_k = 60
 
     # Make predictions on test set
     pred_test_y = predict(train_X, train_y, test_X, best_k)    

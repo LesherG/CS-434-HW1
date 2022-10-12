@@ -1,0 +1,79 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+\title{HW 1}
+\author{Gavin Lesher}
+\date{October 12th 2022}
+\begin{document}
+    \maketitle
+    \section*{Q1: Maximum Likelihood Estimation of $\lambda$}
+        \subsection*{1. Write out the log-likelihood function $logP(D|\lambda)$}
+
+            \begin{align*}
+                P(D|\lambda) &= \prod^{N}_{i=1} P(x_i | \lambda) = \prod_{i=1}^{N} \frac{\lambda^{x_i}e^{-\lambda}}{x!}\\
+                LL(\lambda)&= ln(\prod_{i=1}^{N} \frac{\lambda^{x_i}e^{-\lambda}}{x!})\\
+                &= \sum_{i=1}^{N} ln(\lambda^{x_i}) + ln(e^{-\lambda}) - ln(x!)\\
+                &= \sum_{i=1}^{N} x_iln(\lambda) - \lambda - ln(x!)
+            \end{align*}
+
+        \subsection*{2. Take the derivative of the log-likelihood with respect to the parameter $\lambda$}
+            \begin{align*}
+                \frac{d}{d\lambda}\left(\sum_{i=1}^{N} x_iln(\lambda) - \lambda - ln(x!)\right) &= \sum(\frac{x_i}{\lambda} -1) \\
+                &= \frac{1}{\lambda}\sum_{i=1}^N (x_i) -N
+            \end{align*}
+
+        \subsection*{3. Set the derivative equal to zero and solve for $\lambda$ - call this maximizing value $\hat{\lambda}_{MLE}$}
+    
+            \begin{align*}
+                0 &= \frac{1}{\lambda}\sum_{i=1}^N (x_i) -N\\
+                N &= \frac{1}{\lambda}\sum_{i=1}^N (x_i)\\
+                N\lambda &= \sum_{i=1}^N (x_i)\\
+                \lambda &= \frac{1}{N}\sum_{i=1}^N (x_i) = \hat{\lambda}_{MLE}
+            \end{align*}
+
+    \section*{Q2: Maximum A Posteriori Estimate of $\lambda$ with a Gamma Prior}
+
+            \subsection*{1. Write out the log-posterior $logP (\lambda|D) \propto logP (D|\lambda) + logP (\lambda)$}
+
+                \begin{align*}
+                    P(\lambda|D) &\propto P(D|\lambda)*P(\lambda) \left[P(\lambda) = \frac{\beta^\alpha\lambda^{\alpha-1}e^{-\beta\lambda}}{\Gamma(\alpha)}\right]\\
+                    logP(\lambda|D) &\propto logP(D|\lambda) + logP(\lambda)\\
+                    &\propto (\sum_{i=1}^{N} x_iln(\lambda) - \lambda - ln(x!))\\& + (\alpha ln(\beta) + (\alpha-1)ln(\lambda) - \beta\lambda-ln(\Gamma(a)))
+                \end{align*}
+            \subsection*{2. Take the derivative of $logP (D|\lambda) + logP (\lambda)$ with respect to the parameter $\lambda$.}
+                \begin{align*}
+                    \frac{d}{d\lambda} & \left( \frac{1}{\lambda}\sum_{i=1}^N (x_i) - N + 0 +\frac{a-1}{\lambda} - \beta - 0   \right)\\
+                    & \frac{1}{\lambda}\sum_{i=1}^N (x_i) - N + \frac{a-1}{\lambda} - \beta
+                \end{align*}
+
+            \subsection*{3. Set the derivative equal to zero and solve for $\lambda$ – call this maximizing value $\hat{\lambda}_{MAP}$}
+                \begin{align*}
+                    0 &= \frac{1}{\lambda}\sum_{i=1}^N (x_i) - N + \frac{a-1}{\lambda} - \beta\\
+                    \beta + N &= \frac{1}{\lambda}\left(\sum_{i=1}^N (x_i) + (a-1)\right)\\
+                    \lambda(\beta + N) &=\sum_{i=1}^N (x_i) + (a-1)\\
+                    \lambda &=\frac{\sum_{i=1}^N (x_i) + a-1}{\beta+N} = \hat{\lambda}_{MAP}
+                \end{align*}
+
+    \section*{Q3: Deriving the Posterior of a Poisson-Gamma Model}
+
+        \begin{align*}
+            Gamma(\lambda;\alpha_P, \beta_P) &\propto P(\lambda|D)\\
+            &\propto P(D|\lambda)P(\lambda)\\
+            &\propto \prod^N_{i=1}\frac{\lambda^{x_i}e^{-\lambda}}{x!} * \frac{\beta^\alpha\lambda^{\alpha-1}e^{-\beta\lambda}}{\Gamma(\alpha)}\\
+            &\propto \frac{\lambda^{\sum x_i} e^{-N\lambda}}{\prod x_i!}*\frac{\beta^\alpha\lambda^{\alpha-1}e^{-\beta\lambda}}{\Gamma(\alpha)}\\
+        \end{align*}
+        \begin{center}$\left(\prod x_i, \Gamma(\alpha) \text{ and } \beta^\aleph \text{ are constants with respect to } \lambda\right)$\end{center}
+        \begin{align*}
+            Gamma(\lambda;\alpha_P, \beta_P) &\propto \lambda^{\left(\alpha + \sum x_i\right) - 1}*e^{-(N+\beta)\lambda}\\
+            &\propto Gamma\left(\alpha + \sum_{i=1}^N x_i , N+B\right)
+        \end{align*}
+            
+    \section*{Q4:}
+        
+    \section*{Q5:}
+
+    \section*{Q6:}
+
+    \section*{Q9:}
+
+\end{document}
