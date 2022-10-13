@@ -72,7 +72,7 @@ def main():
 
     # Search over possible settings of k
     print("Performing 4-fold cross validation")
-    for k in [30, 35, 40, 45 ,50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110]:
+    for k in [1, 30, 35, 40, 45 ,50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110]:
       t0 = time.time()
 
       #######################################
@@ -175,6 +175,8 @@ def knn_classify_point(examples_X, examples_y, query, k):
     for x in NN:
         tally += examples_y[x]
             
+    # TODO If I were to change the evaluation ie. using weighted votes or
+    #      changing the % needed for a "yes", it would be right here.
     return 1 if tally/k > .5 else 0
 
     # return predicted_label

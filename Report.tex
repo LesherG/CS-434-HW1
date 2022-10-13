@@ -10,15 +10,15 @@
         \subsection*{1. Write out the log-likelihood function $logP(D|\lambda)$}
 
             \begin{align*}
-                P(D|\lambda) &= \prod^{N}_{i=1} P(x_i | \lambda) = \prod_{i=1}^{N} \frac{\lambda^{x_i}e^{-\lambda}}{x!}\\
-                LL(\lambda)&= ln(\prod_{i=1}^{N} \frac{\lambda^{x_i}e^{-\lambda}}{x!})\\
-                &= \sum_{i=1}^{N} ln(\lambda^{x_i}) + ln(e^{-\lambda}) - ln(x!)\\
-                &= \sum_{i=1}^{N} x_iln(\lambda) - \lambda - ln(x!)
+                P(D|\lambda) &= \prod^{N}_{i=1} P(x_i | \lambda) = \prod_{i=1}^{N} \frac{\lambda^{x_i}e^{-\lambda}}{x_i!}\\
+                LL(\lambda)&= ln(\prod_{i=1}^{N} \frac{\lambda^{x_i}e^{-\lambda}}{x_i!})\\
+                &= \sum_{i=1}^{N} ln(\lambda^{x_i}) + ln(e^{-\lambda}) - ln(x_i!)\\
+                &= \sum_{i=1}^{N} x_iln(\lambda) - \lambda - ln(x_i!)
             \end{align*}
 
         \subsection*{2. Take the derivative of the log-likelihood with respect to the parameter $\lambda$}
             \begin{align*}
-                \frac{d}{d\lambda}\left(\sum_{i=1}^{N} x_iln(\lambda) - \lambda - ln(x!)\right) &= \sum(\frac{x_i}{\lambda} -1) \\
+                \frac{d}{d\lambda}\left(\sum_{i=1}^{N} x_iln(\lambda) - \lambda - ln(x_i!)\right) &= \sum\left(\frac{x_i}{\lambda} -1\right) \\
                 &= \frac{1}{\lambda}\sum_{i=1}^N (x_i) -N
             \end{align*}
 
@@ -38,12 +38,13 @@
                 \begin{align*}
                     P(\lambda|D) &\propto P(D|\lambda)*P(\lambda) \left[P(\lambda) = \frac{\beta^\alpha\lambda^{\alpha-1}e^{-\beta\lambda}}{\Gamma(\alpha)}\right]\\
                     logP(\lambda|D) &\propto logP(D|\lambda) + logP(\lambda)\\
-                    &\propto (\sum_{i=1}^{N} x_iln(\lambda) - \lambda - ln(x!))\\& + (\alpha ln(\beta) + (\alpha-1)ln(\lambda) - \beta\lambda-ln(\Gamma(a)))
+                    &\propto \sum_{i=1}^{N}\left( x_iln(\lambda) - \lambda - ln(x_i!)\right)\\& + (\alpha ln(\beta) + (\alpha-1)ln(\lambda) - \beta\lambda-ln(\Gamma(a)))
                 \end{align*}
             \subsection*{2. Take the derivative of $logP (D|\lambda) + logP (\lambda)$ with respect to the parameter $\lambda$.}
                 \begin{align*}
-                    \frac{d}{d\lambda} & \left( \frac{1}{\lambda}\sum_{i=1}^N (x_i) - N + 0 +\frac{a-1}{\lambda} - \beta - 0   \right)\\
-                    & \frac{1}{\lambda}\sum_{i=1}^N (x_i) - N + \frac{a-1}{\lambda} - \beta
+                    \frac{d}{d\lambda} & ( \sum_{i=1}^{N} (x_iln(\lambda) - \lambda - ln(x_i!))\\& + \alpha ln(\beta) + (\alpha-1)ln(\lambda) - \beta\lambda-ln(\Gamma(a)))\\
+                    & = \frac{1}{\lambda}\sum_{i=1}^N (x_i) - N - 0 + 0 +\frac{a-1}{\lambda} - \beta - 0  \\
+                    & = \frac{1}{\lambda}\sum_{i=1}^N (x_i) - N + \frac{a-1}{\lambda} - \beta
                 \end{align*}
 
             \subsection*{3. Set the derivative equal to zero and solve for $\lambda$ – call this maximizing value $\hat{\lambda}_{MAP}$}
@@ -59,21 +60,41 @@
         \begin{align*}
             Gamma(\lambda;\alpha_P, \beta_P) &\propto P(\lambda|D)\\
             &\propto P(D|\lambda)P(\lambda)\\
-            &\propto \prod^N_{i=1}\frac{\lambda^{x_i}e^{-\lambda}}{x!} * \frac{\beta^\alpha\lambda^{\alpha-1}e^{-\beta\lambda}}{\Gamma(\alpha)}\\
-            &\propto \frac{\lambda^{\sum x_i} e^{-N\lambda}}{\prod x_i!}*\frac{\beta^\alpha\lambda^{\alpha-1}e^{-\beta\lambda}}{\Gamma(\alpha)}\\
+            & = \prod^N_{i=1}\frac{\lambda^{x_i}e^{-\lambda}}{x_i!} * \frac{\beta^\alpha\lambda^{\alpha-1}e^{-\beta\lambda}}{\Gamma(\alpha)}\\
+            & = \frac{\lambda^{\sum x_i} e^{-N\lambda}}{\prod x_i!}*\frac{\beta^\alpha\lambda^{\alpha-1}e^{-\beta\lambda}}{\Gamma(\alpha)}\\
+            & = \frac{\beta^\alpha\lambda^{\Right( \alpha + \sum x_i- 1} e^{-N\lambda-\beta\lambda}}{\prod x_i!*\Gamma(\alpha)}
         \end{align*}
-        \begin{center}$\left(\prod x_i, \Gamma(\alpha) \text{ and } \beta^\aleph \text{ are constants with respect to } \lambda\right)$\end{center}
+        \begin{center}$\left(\prod x_i!, \Gamma(\alpha) \text{ and } \beta^\alpha \text{ are constants with respect to } \lambda\right)$\end{center}
         \begin{align*}
             Gamma(\lambda;\alpha_P, \beta_P) &\propto \lambda^{\left(\alpha + \sum x_i\right) - 1}*e^{-(N+\beta)\lambda}\\
             &\propto Gamma\left(\alpha + \sum_{i=1}^N x_i , N+B\right)
         \end{align*}
             
-    \section*{Q4:}
+    \section*{Q4: Encodings and Distance}
+        \quad If we were to use the original encoding (ie. jobs are categorized as 0, 1, 2, ... etc.) the euclidian distance would be higher an jobs that got arbitrarily assigned a higher index.
+        This puts a bias on jobs, so we seperate them to put no bias on jobs, at the cost of a larger dimensionality.
+    \section*{Q5: Looking at Data}
+        \quad According to the data, 1967/8000 are $\geq$ 50k, which is about 24.6\%. 
+        This percentage means that models that are accurate around that percentage probably aren't the best due to the fact that if a theoretical model only predicted $\le$ 50k, it would be close to 100\% accurate.    
+
+        Each data point has 85 dimensions, not including the label and id.
+    \section*{Q6: Norms and Distances}
+        The distance between 2 points/vectors can be writen as:
+        \begin{align*}
+            \sqrt{(x_1-z_1)^2 + (x_2- z_1)^2 + ... + (x_d-z_d)^2}
+        \end{align*}
+        This can be re-written to:
+        \begin{equation*}
+            \sqrt{\sum_{i=1}^d (x_i-z_i)^2}
+        \end{equation*}
+        Which can be interpreted as the norm of the difference between twe vectors or $\lVert x_i - z_i \rVert _2$.
+
+    \section*{Q9: Hyperparameter Search}
+
+        The best number of neighbors I observed was 60. I didn't do too much trial and error, as I started a little later than I would have liked on this assignment, but I figure this is sufficient enough.
         
-    \section*{Q5:}
+        When k=1 the training error is not 0\%, and is about 1.5-2\%. This may be because of overlapping points in our data set. If two data points are in the same location with different labels, the program will arbitrarily choose one, and because of that there is a chance it will be wrong.
 
-    \section*{Q6:}
-
-    \section*{Q9:}
+        As k increases there is a noticable trend to less validation error, but when it hits a certain value (around k=60 in this instance), it will start to increase. In other words, we are underfitting less and less until we get to that value, then when you cross over it begins to overfit the data.
 
 \end{document}
